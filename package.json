@@ -29,6 +29,6 @@
   "dependencies": {
     "esprima-next": "^5.8.4",
     "recast": "^0.22.0",
-    "ast-types": "^0.14.2"
+    "ast-types": "^0.16.1"
   }
 }

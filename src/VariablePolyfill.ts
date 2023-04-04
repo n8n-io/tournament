@@ -1,6 +1,4 @@
 import { parse, visit, types } from 'recast';
-import { getOption } from 'recast/lib/util';
-import { parse as esprimaParse } from 'esprima-next';
 import {
 	CatchClauseKind,
 	ExpressionKind,
@@ -8,35 +6,14 @@ import {
 	PropertyKind,
 	StatementKind,
 	VariableDeclaratorKind,
-} from 'ast-types/gen/kinds';
+} from 'ast-types/lib/gen/kinds';
 import { NodePath } from 'ast-types/lib/node-path';
-import { namedTypes } from 'ast-types/gen/namedTypes';
-import { builders as b } from 'ast-types';
+import { builders as b, namedTypes } from 'ast-types';
+import { parseWithEsprimaNext } from './Parser';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseWithEsprimaNext(source: string, options?: any): any {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-	const ast = esprimaParse(source, {
-		loc: true,
-		locations: true,
-		comment: true,
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		range: getOption(options, 'range', false),
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		tolerant: getOption(options, 'tolerant', true),
-		tokens: true,
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		jsx: getOption(options, 'jsx', false),
-		sourceType: 'script',
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} as any);
-
-	return ast;
+function assertNever(value: never): value is never {
+	return true;
 }
-
-// function assertNever(value: never): value is never {
-// 	return true;
-// }
 
 const globalIdentifier = b.identifier(
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -138,14 +115,10 @@ const customPatches: Partial<Record<ParentKind['type'], CustomPatcher>> = {
 };
 
 export const jsVariablePolyfill = (
-	expression: string,
+	ast: types.namedTypes.File,
 	dataNode: DataNode,
 ): StatementKind[] | undefined => {
 	try {
-		const ast = parse(expression, {
-			parser: { parse: parseWithEsprimaNext },
-		}) as namedTypes.File;
-
 		visit(ast, {
 			visitIdentifier(path) {
 				this.traverse(path);
@@ -190,6 +163,7 @@ export const jsVariablePolyfill = (
 					case 'ForAwaitStatement':
 					case 'ThrowStatement':
 					case 'WithStatement':
+					case 'TupleExpression':
 						polyfillVar(path, dataNode);
 						break;
 
@@ -225,6 +199,19 @@ export const jsVariablePolyfill = (
 					case 'RestElement':
 					case 'ArrayPattern':
 					case 'ObjectPattern':
+					case 'ClassExpression':
+					case 'RecordExpression':
+					case 'V8IntrinsicIdentifier':
+					case 'TopicReference':
+					case 'MethodDefinition':
+					case 'ClassDeclaration':
+					case 'ClassProperty':
+					case 'StaticBlock':
+					case 'ClassBody':
+					case 'ExportNamedDeclaration':
+					case 'ClassPrivateProperty':
+					case 'ClassAccessorProperty':
+					case 'PropertyPattern':
 						break;
 
 					// I can't seem to figure out what causes these
@@ -248,6 +235,7 @@ export const jsVariablePolyfill = (
 					case 'TypeAlias':
 					case 'OpaqueType':
 					case 'EnumDeclaration':
+					case 'TypeCastExpression':
 						break;
 
 					// Typescript types
@@ -264,10 +252,13 @@ export const jsVariablePolyfill = (
 					case 'TSPropertySignature':
 					case 'TSModuleDeclaration':
 					case 'TSParameterProperty':
+					case 'TSTypeCastExpression':
+					case 'TSSatisfiesExpression':
 					case 'TSTypeAliasDeclaration':
 					case 'TSInterfaceDeclaration':
 					case 'TSImportEqualsDeclaration':
 					case 'TSExternalModuleReference':
+					case 'TSInstantiationExpression':
 					case 'TSTypeParameterDeclaration':
 					case 'TSCallSignatureDeclaration':
 					case 'TSNamespaceExportDeclaration':
@@ -283,6 +274,7 @@ export const jsVariablePolyfill = (
 					case 'Literal':
 					case 'RegExpLiteral':
 					case 'BooleanLiteral':
+					case 'DecimalLiteral':
 						break;
 
 					// Proposals that are stage 0 or 1
@@ -307,16 +299,15 @@ export const jsVariablePolyfill = (
 						break;
 
 					default:
-						console.error(path.parentPath.node.type, path.node.name);
-						// assertNever(parent.type);
+						// This is a simple type guard that guarantees we haven't missed
+						// a case. It'll result in a type error at compile time.
+						assertNever(parent);
 						break;
 				}
 			},
 		});
 
-		// return print(ast);
-		// // @ts-ignore
-		return ast.program.body;
+		return ast.program.body as StatementKind[];
 	} catch (e) {
 		console.error(e);
 	}
