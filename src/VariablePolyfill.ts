@@ -1,15 +1,8 @@
-import { parse, visit, types } from 'recast';
-import {
-	CatchClauseKind,
-	ExpressionKind,
-	PatternKind,
-	PropertyKind,
-	StatementKind,
-	VariableDeclaratorKind,
-} from 'ast-types/lib/gen/kinds';
+import { visit, types } from 'recast';
+import type { StatementKind, VariableDeclaratorKind } from 'ast-types/lib/gen/kinds';
 import { NodePath } from 'ast-types/lib/node-path';
 import { builders as b, namedTypes } from 'ast-types';
-import { parseWithEsprimaNext } from './Parser';
+import { EXEMPT_IDENTIFIER_LIST, ParentKind } from './Constants';
 
 function assertNever(value: never): value is never {
 	return true;
@@ -59,13 +52,6 @@ const polyfillVar = (
 
 export type DataNode = namedTypes.ThisExpression | namedTypes.Identifier;
 
-type ParentKind =
-	| ExpressionKind
-	| StatementKind
-	| PropertyKind
-	| PatternKind
-	| VariableDeclaratorKind
-	| CatchClauseKind;
 type CustomPatcher = (
 	path: NodePath<types.namedTypes.Identifier>,
 	parent: any,
@@ -123,6 +109,11 @@ export const jsVariablePolyfill = (
 			visitIdentifier(path) {
 				this.traverse(path);
 				const parent: ParentKind = path.parent.node;
+
+				// This is for tmpl compat
+				if (EXEMPT_IDENTIFIER_LIST.includes(path.node.name)) {
+					return;
+				}
 
 				switch (parent.type) {
 					case 'AssignmentPattern':
