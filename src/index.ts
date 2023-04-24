@@ -1,27 +1,24 @@
-// @ts-ignore
-import * as tmpl from '@n8n_io/riot-tmpl';
-
 import { getExpressionCode } from './ExpressionBuilder';
 import type { ExpressionAnalysis } from './ExpressionBuilder';
+import { getTmplDifference } from './Analysis';
 
 const DATA_NODE_NAME = '___n8n_data';
+export type ReturnValue = string | null | (() => unknown);
 
 export class ExpressionEvaluator {
 	private _codeCache: Record<string, [Function, ExpressionAnalysis]> = {};
 
 	constructor(
-		public errorHandler: (error: Error) => void,
+		public errorHandler: (error: Error) => void = () => {},
 		private _dataNodeName: string = DATA_NODE_NAME,
-		private _useCompat: boolean = false,
-	) {
-		if (_useCompat) {
-			tmpl.brackets.set('{{ }}');
-			tmpl.tmpl.errorHandler = errorHandler;
-		}
-	}
+	) {}
 
 	getExpressionCode(expr: string): [string, ExpressionAnalysis] {
 		return getExpressionCode(expr, this._dataNodeName);
+	}
+
+	tmplDiff(expr: string) {
+		return getTmplDifference(expr, this._dataNodeName);
 	}
 
 	private getFunction(expr: string): [Function, ExpressionAnalysis] {
@@ -34,17 +31,13 @@ export class ExpressionEvaluator {
 		return [func, analysis];
 	}
 
-	execute(expr: string, data: any) {
+	execute(expr: string, data: unknown): ReturnValue {
+		// This is to match tmpl. This will only really happen if
+		// an empty expression is passed in.
+		if (!expr) {
+			return expr;
+		}
 		const fn = this.getFunction(expr)[0];
 		return fn.call(data, this.errorHandler);
-	}
-
-	// If using this you can only have one per runtime due to
-	// the fact that we assign the error handler of tmpl on init
-	compatExec(expr: string, data: any) {
-		const [fn, analysis] = this.getFunction(expr);
-		if (analysis.has.function) {
-			return fn.call(data, this.errorHandler);
-		}
 	}
 }

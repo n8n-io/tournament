@@ -7,7 +7,6 @@ import { builders as b } from 'ast-types';
 
 import { ExpressionKind, StatementKind } from 'ast-types/lib/gen/kinds';
 import { parseWithEsprimaNext } from './Parser';
-import { EXEMPT_IDENTIFIER_LIST, ParentKind } from './Constants';
 
 export interface ExpressionAnalysis {
 	has: {
@@ -18,69 +17,16 @@ export interface ExpressionAnalysis {
 
 const v = b.identifier('v');
 
-const isRootExempt = (
-	node: types.namedTypes.MemberExpression | types.namedTypes.CallExpression,
-): boolean => {
-	let obj = node.type === 'MemberExpression' ? node.object : node.callee;
-	while (
-		obj.type === 'MemberExpression' ||
-		obj.type === 'OptionalMemberExpression' ||
-		obj.type === 'CallExpression' ||
-		obj.type === 'OptionalCallExpression'
-	) {
-		if (obj.type === 'CallExpression' || obj.type === 'OptionalCallExpression') {
-			obj = obj.callee;
-		} else {
-			obj = obj.object;
-		}
-	}
-	if (obj.type !== 'Identifier') {
-		return false;
-	}
-	return EXEMPT_IDENTIFIER_LIST.includes(obj.name);
-};
-
 const shouldWrapInTry = (node: namedTypes.ASTNode) => {
 	let shouldWrap = false;
 
 	visit(node, {
 		visitMemberExpression(path) {
-			// This is for a weird edge case in riot-tmpl
-			// where if there's an optional member expression
-			// or function call it doesn't wrap in an error.
-			// This is purely for syntax compat and should be
-			// removed when that's no longer a goal.
-			if (path.node.optional) {
-				shouldWrap = false;
-				return false;
-			}
-			shouldWrap = !isRootExempt(path.node);
-			const parent: ParentKind = path.parent.node;
-			if (shouldWrap && parent.type !== 'MemberExpression') {
-				shouldWrap = false;
-			}
-			if (!shouldWrap) {
-				this.traverse(path);
-				return;
-			}
-
+			shouldWrap = true;
 			return false;
 		},
 		visitCallExpression(path) {
-			// This is for a weird edge case in riot-tmpl
-			// where if there's an optional member expression
-			// or function call it doesn't wrap in an error.
-			// This is purely for syntax compat and should be
-			// removed when that's no longer a goal.
-			if (path.node.optional) {
-				shouldWrap = false;
-				return false;
-			}
-			shouldWrap = !isRootExempt(path.node);
-			if (!shouldWrap) {
-				this.traverse(path);
-				return;
-			}
+			shouldWrap = true;
 			return false;
 		},
 	});
@@ -114,8 +60,12 @@ const hasTemplateString = (node: types.namedTypes.ASTNode) => {
 
 	visit(node, {
 		visitTemplateLiteral(path) {
-			hasTemp = true;
-			return false;
+			if (path.node.expressions.length) {
+				hasTemp = true;
+				return false;
+			}
+			this.traverse(path);
+			return;
 		},
 	});
 
@@ -168,8 +118,8 @@ const buildFunctionBody = (expr: ExpressionKind) => {
 
 type ParsedCode = ExpressionCode & { parsed: types.namedTypes.File };
 
-// This replaces any actual new lines with \n's. This only really
-// happens to template strings.
+// This replaces any actual new lines with \n's. This only happens in
+// template strings.
 const fixStringNewLines = (node: types.namedTypes.File): types.namedTypes.File => {
 	const replace = (str: string): string => {
 		return str.replace(/\n/g, '\\n');
@@ -186,25 +136,13 @@ const fixStringNewLines = (node: types.namedTypes.File): types.namedTypes.File =
 			);
 			path.replace(el);
 		},
-		visitLiteral(path) {
-			this.traverse(path);
-			if (typeof path.node.value === 'string') {
-				path.replace(b.literal(replace(path.node.value)));
-			}
-		},
-		visitStringLiteral(path) {
-			path.replace(b.stringLiteral(replace(path.node.value)));
-		},
 	});
 
 	return node;
 };
 
-export const getExpressionCode = (
-	expr: string,
-	dataNodeName: string,
-): [string, ExpressionAnalysis] => {
-	const chunks = splitExpression(expr).map<ExpressionText | ParsedCode>((chunk) => {
+export const getParsedExpression = (expr: string): Array<ExpressionText | ParsedCode> => {
+	return splitExpression(expr).map<ExpressionText | ParsedCode>((chunk) => {
 		if (chunk.type === 'code') {
 			const code = maybeWrapExpr(chunk.text);
 			const node = parse(code, {
@@ -215,6 +153,13 @@ export const getExpressionCode = (
 		}
 		return chunk;
 	});
+};
+
+export const getExpressionCode = (
+	expr: string,
+	dataNodeName: string,
+): [string, ExpressionAnalysis] => {
+	const chunks = getParsedExpression(expr);
 
 	const newProg = b.program([
 		b.variableDeclaration('var', [
@@ -246,7 +191,12 @@ export const getExpressionCode = (
 	// This means we always have an initial text chunk but if there's only a blank
 	// text chunk and a code chunk then we want to return the actual value of the
 	// expression, not turn it into a string.
-	if (chunks.length > 2 || chunks[0].text !== '') {
+	if (
+		chunks.length > 2 ||
+		chunks[0].text !== '' ||
+		// This is a blank expression. It should just return an empty string
+		(chunks[0].text === '' && chunks.length === 1)
+	) {
 		let parts: ExpressionKind[] = [];
 		for (const chunk of chunks) {
 			// This is just a text chunks, push it up as a literal.
@@ -256,7 +206,7 @@ export const getExpressionCode = (
 			} else {
 				let parsed = jsVariablePolyfill(fixStringNewLines(chunk.parsed), dataNode)?.[0];
 				if (!parsed || parsed.type !== 'ExpressionStatement') {
-					throw new Error('BBBBBBBBB');
+					throw new SyntaxError('Not a expression statement');
 				}
 
 				let functionBody = buildFunctionBody(parsed.expression);
@@ -307,7 +257,7 @@ export const getExpressionCode = (
 			dataNode,
 		)?.[0];
 		if (!parsed || parsed.type !== 'ExpressionStatement') {
-			throw new Error('AAAAAAAAAAA');
+			throw new SyntaxError('Not a expression statement');
 		}
 
 		let retData: StatementKind = b.returnStatement(parsed.expression);

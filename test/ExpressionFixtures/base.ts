@@ -803,4 +803,12 @@ line`,
 		expression: '={{ test?.test(something.test)?.test }}',
 		tests: [],
 	},
+	{ expression: '={{$items("test", 1)[$position].json.thread_id}}', tests: [] },
+	{ expression: '=', tests: [] },
+	{ expression: '=something {{ Math.random(123) }} something else', tests: [] },
+	{
+		expression: `={{ $json.something.split('\\n') }} something {{ $json.test.split("asdf") }}`,
+		tests: [],
+	},
+	{ expression: '={{ `\ntesting\ntesting\n` }}', tests: [] },
 ];

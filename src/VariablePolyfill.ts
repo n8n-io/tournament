@@ -60,7 +60,7 @@ type CustomPatcher = (
 
 const customPatches: Partial<Record<ParentKind['type'], CustomPatcher>> = {
 	MemberExpression(path, parent: namedTypes.MemberExpression, dataNode) {
-		if (parent.object === path.node) {
+		if (parent.object === path.node || parent.computed) {
 			polyfillVar(path, dataNode);
 		}
 	},
