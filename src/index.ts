@@ -6,7 +6,7 @@ export type { TmplDifference } from './Analysis';
 const DATA_NODE_NAME = '___n8n_data';
 export type ReturnValue = string | null | (() => unknown);
 
-export class ExpressionEvaluator {
+export class Tournament {
 	private _codeCache: Record<string, [Function, ExpressionAnalysis]> = {};
 
 	constructor(

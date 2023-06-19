@@ -1,11 +1,11 @@
 import * as tmpl from '@n8n_io/riot-tmpl';
 
 import { baseFixtures } from './ExpressionFixtures/base';
-import { ExpressionEvaluator } from '@/index';
+import { Tournament } from '@/index';
 import { isDifferent } from '@/Differ';
 
 tmpl.brackets.set('{{ }}');
-const evaluator = new ExpressionEvaluator((e) => {});
+const evaluator = new Tournament((e) => {});
 
 describe('Expression', () => {
 	describe('Test all expression transform fixtures', () => {
