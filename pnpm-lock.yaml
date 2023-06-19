@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
   ast-types:
@@ -14,7 +18,7 @@ dependencies:
 devDependencies:
   '@n8n_io/eslint-config':
     specifier: ^0.0.1
-    version: 0.0.1
+    version: link:../n8n-tmpl/packages/@n8n_io/eslint-config
   '@types/jest':
     specifier: ^29.5.0
     version: 29.5.0
@@ -711,10 +715,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
-    dev: true
-
-  /@n8n_io/eslint-config@0.0.1:
-    resolution: {integrity: sha512-S1Yjx7KDyij7xKai16rOIRKMLQuO7vl8z/DGYbS1oWOIl9VkOTAb8AGl/MBnsIPRRY90zoZ9NRh1dZdbnJhRLw==}
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:

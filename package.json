@@ -1,7 +1,7 @@
 {
-  "name": "@n8n_io/tournament",
+  "name": "@n8n/tournament",
   "version": "1.0.0",
-  "description": "",
+  "description": "Output compatiable rewrite of riot tmpl",
   "main": "dist/index.js",
   "module": "src/index.ts",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "tsc -p ./tsconfig.build.json",
     "test": "jest"
   },
   "keywords": [],

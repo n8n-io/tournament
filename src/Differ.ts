@@ -1,5 +1,5 @@
 import { StatementKind } from 'ast-types/lib/gen/kinds';
-import { types, parse, visit } from 'recast';
+import { types, parse } from 'recast';
 import { parseWithEsprimaNext } from './Parser';
 
 const isWrapped = (node: types.namedTypes.File): boolean => {

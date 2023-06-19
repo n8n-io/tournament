@@ -48,14 +48,7 @@ export const getTmplDifference = (expr: string, dataNodeName: string): TmplDiffe
 	}
 	if (tournParsed === null && tmplParsed === null) {
 		// Bad expression
-		return {
-			same: false,
-			expression: 'UNPARSEABLE',
-			parserError: {
-				tmpl: true,
-				tournament: true,
-			},
-		};
+		return { same: true };
 	} else if (tournParsed === null) {
 		// Unparsable expression for tournament
 		return {
