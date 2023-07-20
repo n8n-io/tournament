@@ -1,6 +1,5 @@
 import { getExpressionCode } from './ExpressionBuilder';
 import type { ExpressionAnalysis } from './ExpressionBuilder';
-import type { TmplDifference } from './Analysis';
 import { getTmplDifference } from './Analysis';
 export type { TmplDifference } from './Analysis';
 
@@ -13,7 +12,6 @@ export class Tournament {
 	constructor(
 		public errorHandler: (error: Error) => void = () => {},
 		private _dataNodeName: string = DATA_NODE_NAME,
-		public tmplDiffReporter: (diff: TmplDifference) => void = () => {},
 	) {}
 
 	getExpressionCode(expr: string): [string, ExpressionAnalysis] {
@@ -21,10 +19,7 @@ export class Tournament {
 	}
 
 	tmplDiff(expr: string) {
-		const diff = getTmplDifference(expr, this._dataNodeName);
-		if (!diff.same) {
-			this.tmplDiffReporter(diff);
-		}
+		return getTmplDifference(expr, this._dataNodeName);
 	}
 
 	private getFunction(expr: string): [Function, ExpressionAnalysis] {
