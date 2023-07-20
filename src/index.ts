@@ -1,6 +1,7 @@
 import { getExpressionCode } from './ExpressionBuilder';
 import type { ExpressionAnalysis } from './ExpressionBuilder';
-import { getTmplDifference, TmplDifference } from './Analysis';
+import type { TmplDifference } from './Analysis';
+import { getTmplDifference } from './Analysis';
 export type { TmplDifference } from './Analysis';
 
 const DATA_NODE_NAME = '___n8n_data';

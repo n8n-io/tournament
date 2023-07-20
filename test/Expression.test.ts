@@ -5,7 +5,7 @@ import { Tournament } from '@/index';
 import { isDifferent } from '@/Differ';
 
 tmpl.brackets.set('{{ }}');
-const evaluator = new Tournament((e) => {});
+const evaluator = new Tournament(() => {});
 
 describe('Expression', () => {
 	describe('Test all expression transform fixtures', () => {

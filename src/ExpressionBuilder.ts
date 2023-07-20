@@ -1,11 +1,14 @@
-import { ExpressionCode, ExpressionText, splitExpression } from './ExpressionSplitter';
-import { DataNode, jsVariablePolyfill } from './VariablePolyfill';
-import { namedTypes } from 'ast-types';
-import { parse, visit, types, print } from 'recast';
+import type { namedTypes } from 'ast-types';
+import type { types } from 'recast';
+import { parse, visit, print } from 'recast';
 
 import { builders as b } from 'ast-types';
 
-import { ExpressionKind, StatementKind } from 'ast-types/lib/gen/kinds';
+import type { ExpressionKind, StatementKind } from 'ast-types/lib/gen/kinds';
+import { jsVariablePolyfill } from './VariablePolyfill';
+import type { DataNode } from './VariablePolyfill';
+import { splitExpression } from './ExpressionSplitter';
+import type { ExpressionCode, ExpressionText } from './ExpressionSplitter';
 import { parseWithEsprimaNext } from './Parser';
 
 export interface ExpressionAnalysis {
@@ -21,11 +24,11 @@ const shouldWrapInTry = (node: namedTypes.ASTNode) => {
 	let shouldWrap = false;
 
 	visit(node, {
-		visitMemberExpression(path) {
+		visitMemberExpression() {
 			shouldWrap = true;
 			return false;
 		},
-		visitCallExpression(path) {
+		visitCallExpression() {
 			shouldWrap = true;
 			return false;
 		},
@@ -38,15 +41,15 @@ const hasFunction = (node: types.namedTypes.ASTNode) => {
 	let hasFn = false;
 
 	visit(node, {
-		visitFunctionExpression(path) {
+		visitFunctionExpression() {
 			hasFn = true;
 			return false;
 		},
-		visitFunctionDeclaration(path) {
+		visitFunctionDeclaration() {
 			hasFn = true;
 			return false;
 		},
-		visitArrowFunctionExpression(path) {
+		visitArrowFunctionExpression() {
 			hasFn = true;
 			return false;
 		},
@@ -173,8 +176,8 @@ export const getExpressionCode = (
 	// of `this` (default: `___n8n_data`) since functions aren't compatibility
 	// anyway.
 	let dataNode: DataNode = b.thisExpression();
-	const hasFn = (chunks.filter((v) => v.type === 'code') as ParsedCode[]).some((v) =>
-		hasFunction(v.parsed),
+	const hasFn = (chunks.filter((c) => c.type === 'code') as ParsedCode[]).some((c) =>
+		hasFunction(c.parsed),
 	);
 	if (hasFn) {
 		dataNode = b.identifier(dataNodeName);
@@ -183,8 +186,8 @@ export const getExpressionCode = (
 		);
 	}
 
-	const hasTempString = (chunks.filter((v) => v.type === 'code') as ParsedCode[]).some((v) =>
-		hasTemplateString(v.parsed),
+	const hasTempString = (chunks.filter((c) => c.type === 'code') as ParsedCode[]).some((c) =>
+		hasTemplateString(c.parsed),
 	);
 
 	// So for compatibility we parse expressions the same way that `tmpl` does.
@@ -204,12 +207,12 @@ export const getExpressionCode = (
 				parts.push(b.literal(chunk.text));
 				// This is a code chunk so do some magic
 			} else {
-				let parsed = jsVariablePolyfill(fixStringNewLines(chunk.parsed), dataNode)?.[0];
+				const parsed = jsVariablePolyfill(fixStringNewLines(chunk.parsed), dataNode)?.[0];
 				if (!parsed || parsed.type !== 'ExpressionStatement') {
 					throw new SyntaxError('Not a expression statement');
 				}
 
-				let functionBody = buildFunctionBody(parsed.expression);
+				const functionBody = buildFunctionBody(parsed.expression);
 
 				if (shouldWrapInTry(parsed)) {
 					// Wraps the body of our expression function in a try/catch
