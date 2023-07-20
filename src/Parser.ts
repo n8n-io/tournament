@@ -18,5 +18,6 @@ export function parseWithEsprimaNext(source: string, options?: any): any {
 		return ast;
 	} catch (error) {
 		if (error instanceof Error) throw new SyntaxError(error.message);
+		throw error;
 	}
 }

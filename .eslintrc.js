@@ -1,7 +1,7 @@
 /**
  * @type {import('@types/eslint').ESLint.ConfigData}
  */
- module.exports = {
+module.exports = {
 	parser: '@typescript-eslint/parser',
 
 	parserOptions: {
@@ -123,6 +123,7 @@
 		'@typescript-eslint/no-unsafe-member-access': 'off',
 		'@typescript-eslint/no-unsafe-return': 'off',
 		'@typescript-eslint/no-use-before-define': 'off',
+		'@typescript-eslint/prefer-nullish-coalescing': 'off',
 		indent: 'off',
 		'import/extensions': 'off',
 		'sort-imports': 'off',

@@ -40,7 +40,7 @@ export const getTmplDifference = (expr: string, dataNodeName: string): TmplDiffe
 	} catch (e) {
 		tmplParsed = null;
 	}
-	if (analysis?.has.function ?? analysis?.has.templateString) {
+	if (analysis?.has.function || analysis?.has.templateString) {
 		return {
 			same: false,
 			expression: stripIdentifyingInformation(expr),
