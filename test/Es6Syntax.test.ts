@@ -1,4 +1,4 @@
-import { Tournament } from '@/index';
+import { Tournament } from '../src/index';
 
 const fnStub = () => {};
 
