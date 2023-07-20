@@ -10,6 +10,8 @@ jobs:
       - name: Check out commit
         uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v2.2.4
+
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
