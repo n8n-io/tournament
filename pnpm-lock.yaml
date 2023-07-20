@@ -1,10 +1,13 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@n8n_io/riot-tmpl':
+    specifier: ^4.0.0
+    version: 4.0.0
   ast-types:
     specifier: ^0.16.1
     version: 0.16.1
@@ -18,7 +21,7 @@ dependencies:
 devDependencies:
   '@n8n_io/eslint-config':
     specifier: ^0.0.1
-    version: link:../n8n-tmpl/packages/@n8n_io/eslint-config
+    version: 0.0.1
   '@types/jest':
     specifier: ^29.5.0
     version: 29.5.0
@@ -717,6 +720,16 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
+  /@n8n_io/eslint-config@0.0.1:
+    resolution: {integrity: sha512-S1Yjx7KDyij7xKai16rOIRKMLQuO7vl8z/DGYbS1oWOIl9VkOTAb8AGl/MBnsIPRRY90zoZ9NRh1dZdbnJhRLw==}
+    dev: true
+
+  /@n8n_io/riot-tmpl@4.0.0:
+    resolution: {integrity: sha512-/xw8HQgYQlBCrt3IKpNSSB1CgpP7XArw1QTRjP+KEw+OHT8XGvHxXrW9VGdUu9RwDnzm/LFu+dNLeDmwJMeOwQ==}
+    dependencies:
+      eslint-config-riot: 1.0.0
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1331,6 +1344,10 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
     dev: true
+
+  /eslint-config-riot@1.0.0:
+    resolution: {integrity: sha512-NB/L/1Y30qyJcG5xZxCJKW/+bqyj+llbcCwo9DEz8bESIP0SLTOQ8T1DWCCFc+wJ61AMEstj4511PSScqMMfCw==}
+    dev: false
 
   /eslint-scope@7.2.0:
     resolution: {integrity: sha512-DYj5deGlHBfMt15J7rdtyKNq/Nqlv5KfU4iodrQ019XESsRnwXH9KAE0y3cwtUHDo2ob7CypAnCqefh6vioWRw==}
