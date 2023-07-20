@@ -16,9 +16,9 @@ describe('ES6 Syntax', () => {
 	});
 
 	test('interpolation in template literals', () => {
-		const result = t.execute('{{ `abc ${1 + 1} def` }}', {});
+		const result = t.execute('{{ `abc ${num} def` }}', { num: 123 });
 
-		expect(result).toBe('abc 2 def');
+		expect(result).toBe('abc 123 def');
 	});
 
 	test('spread operator', () => {
