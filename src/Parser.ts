@@ -2,10 +2,8 @@ import { parse as esprimaParse } from 'esprima-next';
 import type { Config as EsprimaConfig } from 'esprima-next';
 import { getOption } from 'recast/lib/util';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parseWithEsprimaNext(source: string, options?: any): any {
 	try {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const ast = esprimaParse(source, {
 			loc: true,
 			locations: true,
@@ -18,7 +16,8 @@ export function parseWithEsprimaNext(source: string, options?: any): any {
 		} as EsprimaConfig);
 
 		return ast;
-	} catch (e) {
-		throw new SyntaxError(e.message);
+	} catch (error) {
+		if (error instanceof Error) throw new SyntaxError(error.message);
+		throw error;
 	}
 }

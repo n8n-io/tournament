@@ -1,8 +1,11 @@
-import { visit, types } from 'recast';
+import type { types } from 'recast';
+import { visit } from 'recast';
 import type { StatementKind, VariableDeclaratorKind } from 'ast-types/lib/gen/kinds';
-import { NodePath } from 'ast-types/lib/node-path';
-import { builders as b, namedTypes } from 'ast-types';
-import { EXEMPT_IDENTIFIER_LIST, ParentKind } from './Constants';
+import type { NodePath } from 'ast-types/lib/node-path';
+import type { namedTypes } from 'ast-types';
+import { builders as b } from 'ast-types';
+import type { ParentKind } from './Constants';
+import { EXEMPT_IDENTIFIER_LIST } from './Constants';
 
 function assertNever(value: never): value is never {
 	return true;

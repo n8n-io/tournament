@@ -1,4 +1,4 @@
-import { StatementKind } from 'ast-types/lib/gen/kinds';
+import type { StatementKind } from 'ast-types/lib/gen/kinds';
 import { types, parse } from 'recast';
 import { parseWithEsprimaNext } from './Parser';
 

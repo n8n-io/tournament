@@ -2,7 +2,8 @@ import * as tmpl from '@n8n_io/riot-tmpl';
 import { print, visit } from 'recast';
 import { isDifferent } from './Differ';
 
-import { ExpressionAnalysis, getExpressionCode, getParsedExpression } from './ExpressionBuilder';
+import type { ExpressionAnalysis } from './ExpressionBuilder';
+import { getExpressionCode, getParsedExpression } from './ExpressionBuilder';
 import { joinExpression } from './ExpressionSplitter';
 
 interface TmplOrTournament {
