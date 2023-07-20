@@ -19,6 +19,10 @@
     "test": "jest",
     "lint": "eslint ."
   },
+  "engines": {
+    "node": ">=18.10",
+    "pnpm": ">=8.6"
+  },
   "keywords": [],
   "author": "",
   "license": "Apache-2.0",
