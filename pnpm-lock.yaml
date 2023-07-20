@@ -755,6 +755,12 @@ packages:
     resolution: {integrity: sha512-nqVq6k7q0Kk6GMkifVZQ5yEEHob8wbPMq062ds4E/eywiqfaWuGNAQ+ax678iRTlyOS/i4/e23SB0vb0oylr7Q==}
     dev: true
 
+  /@n8n_io/riot-tmpl@4.0.0:
+    resolution: {integrity: sha512-/xw8HQgYQlBCrt3IKpNSSB1CgpP7XArw1QTRjP+KEw+OHT8XGvHxXrW9VGdUu9RwDnzm/LFu+dNLeDmwJMeOwQ==}
+    dependencies:
+      eslint-config-riot: 1.0.0
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1761,6 +1767,10 @@ packages:
     dependencies:
       eslint: 8.38.0
     dev: true
+
+  /eslint-config-riot@1.0.0:
+    resolution: {integrity: sha512-NB/L/1Y30qyJcG5xZxCJKW/+bqyj+llbcCwo9DEz8bESIP0SLTOQ8T1DWCCFc+wJ61AMEstj4511PSScqMMfCw==}
+    dev: false
 
   /eslint-import-resolver-node@0.3.7:
     resolution: {integrity: sha512-gozW2blMLJCeFpBwugLTGyvVjNoeo1knonXAcatC6bjPBZitotxdWf7Gimr25N4c0AAOo4eOUfaG82IJPDpqCA==}
