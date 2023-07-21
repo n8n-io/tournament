@@ -1,8 +1,8 @@
 import * as tmpl from '@n8n_io/riot-tmpl';
 
-import { baseFixtures } from './ExpressionFixtures/base';
 import { Tournament } from '../src/index';
 import { isDifferent } from '../src/Differ';
+import { baseFixtures } from './ExpressionFixtures/base';
 
 tmpl.brackets.set('{{ }}');
 const evaluator = new Tournament(() => {});

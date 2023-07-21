@@ -1,0 +1,27 @@
+name: On push
+
+on: push
+
+jobs:
+  run-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out commit
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2.2.4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: pnpm
+
+      - name: Run checks
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm lint
+          pnpm test
+
