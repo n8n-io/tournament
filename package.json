@@ -20,6 +20,11 @@
     "lint": "eslint .",
     "lintfix": "eslint . --fix"
   },
+  "engines": {
+    "node": ">=18.10",
+    "pnpm": ">=8.6"
+  },
+  "packageManager": "pnpm@8.6.1",
   "keywords": [],
   "author": "",
   "license": "Apache-2.0",
@@ -44,7 +49,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@n8n_io/riot-tmpl": "^4.0.0",
+    "@n8n_io/riot-tmpl": "^4.0.1",
     "ast-types": "^0.16.1",
     "esprima-next": "^5.8.4",
     "recast": "^0.22.0"
