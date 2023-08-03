@@ -10,7 +10,10 @@ interface TmplOrTournament {
 	tmpl: boolean;
 	tournament: boolean;
 }
-type TmplSame = { same: true };
+interface TmplSame {
+	same: true;
+	expression?: SanitizedString;
+}
 interface TmplDiff {
 	same: false;
 	expression: SanitizedString | 'UNPARSEABLE';
@@ -24,7 +27,7 @@ export const getTmplDifference = (expr: string, dataNodeName: string): TmplDiffe
 		return { same: true };
 	}
 	if (tmpl.brackets.settings.brackets !== '{{ }}') {
-		throw new Error('tmpl not initialized with correct brackets. Cannot do analysis.');
+		tmpl.brackets.set('{{ }}');
 	}
 	let tournParsed: string | null;
 	let tmplParsed: string | null;
@@ -80,7 +83,7 @@ export const getTmplDifference = (expr: string, dataNodeName: string): TmplDiffe
 		};
 	}
 	// Same, nothing to report
-	return { same: true };
+	return { same: true, expression: stripIdentifyingInformation(expr) };
 };
 
 const CHAR_REPLACE = /\S/gu;
