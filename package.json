@@ -24,6 +24,13 @@
     "node": ">=18.10",
     "pnpm": ">=8.6"
   },
+  "files": [
+    "src/",
+    "dist/",
+    "LICENSE.md",
+    "package.json",
+    "tsconfig.json"
+  ],
   "packageManager": "pnpm@8.6.1",
   "keywords": [],
   "author": "",
