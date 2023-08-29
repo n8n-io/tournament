@@ -39,6 +39,8 @@ const isInScope = (path: NodePath<types.namedTypes.Identifier>) => {
 	return false;
 };
 
+const polyfillExceptions = ['this', 'window', 'global'];
+
 const polyfillVar = (
 	path: NodePath<types.namedTypes.Identifier>,
 	dataNode: DataNode,
@@ -49,6 +51,10 @@ const polyfillVar = (
 			// console.log('In scope', path.node.name);
 			return;
 		}
+	}
+	// For tmpl compat we ignore these identifiers
+	if (polyfillExceptions.includes(path.node.name)) {
+		return;
 	}
 	path.replace(buildGlobalSwitch(path.node, dataNode));
 };
