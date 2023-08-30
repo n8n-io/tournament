@@ -6,7 +6,7 @@ describe('ES6 Syntax', () => {
 	let t: Tournament;
 
 	beforeAll(() => {
-		t = new Tournament(fnStub, '___n8n_data', fnStub);
+		t = new Tournament(fnStub, '___n8n_data');
 	});
 
 	test('arrow functions', () => {
