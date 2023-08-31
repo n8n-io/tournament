@@ -20,6 +20,8 @@ export interface ExpressionAnalysis {
 
 const v = b.identifier('v');
 
+const shouldAlwaysWrapList = ['window', 'global', 'this'];
+
 const shouldWrapInTry = (node: namedTypes.ASTNode) => {
 	let shouldWrap = false;
 
@@ -31,6 +33,14 @@ const shouldWrapInTry = (node: namedTypes.ASTNode) => {
 		visitCallExpression() {
 			shouldWrap = true;
 			return false;
+		},
+		visitIdentifier(path) {
+			if (shouldAlwaysWrapList.includes(path.node.name)) {
+				shouldWrap = true;
+				return false;
+			}
+			this.traverse(path);
+			return;
 		},
 	});
 

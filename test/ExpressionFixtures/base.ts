@@ -826,4 +826,7 @@ line`,
 `,
 		tests: [],
 	},
+	{ expression: '={{window}}', tests: [] },
+	{ expression: '={{global}}', tests: [] },
+	{ expression: '={{test = 3}}', tests: [] },
 ];
