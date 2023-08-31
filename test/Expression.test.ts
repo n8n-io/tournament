@@ -2,7 +2,9 @@ import * as tmpl from '@n8n_io/riot-tmpl';
 
 import { Tournament } from '../src/index';
 import { isDifferent } from '../src/Differ';
+import { FunctionEvaluator } from '../src/FunctionEvaluator';
 import { baseFixtures } from './ExpressionFixtures/base';
+import { testExpressionsWithEvaluator } from './utils';
 
 tmpl.brackets.set('{{ }}');
 const evaluator = new Tournament(() => {});
@@ -20,5 +22,9 @@ describe('Expression', () => {
 				expect(isDifferent(tmplStr, tournStr)).toEqual(false);
 			});
 		}
+	});
+
+	describe('Test all expression evaluation fixtures', () => {
+		testExpressionsWithEvaluator(FunctionEvaluator);
 	});
 });
