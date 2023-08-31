@@ -811,4 +811,19 @@ line`,
 		tests: [],
 	},
 	{ expression: '={{ `\ntesting\ntesting\n` }}', tests: [] },
+	{ expression: '={{ new Date }}', tests: [] },
+	{ expression: '={{ new Date() }}', tests: [] },
+	{ expression: '={{ new Date.toISOString() }}', tests: [] },
+	{ expression: '={{ new Date().toISOString() }}', tests: [] },
+	{ expression: '={{ global.test = 3 }}', tests: [] },
+	{ expression: '={{ window.test = 3 }}', tests: [] },
+	{ expression: '={{ this.test = 3 }}', tests: [] },
+	{
+		expression: `=test
+		a
+{{ "test" }}
+{{ test }}
+`,
+		tests: [],
+	},
 ];
