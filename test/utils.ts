@@ -4,7 +4,13 @@ import type { ExpressionTestEvaluation } from './ExpressionFixtures/base';
 import { baseFixtures } from './ExpressionFixtures/base';
 
 export const testExpressionsWithEvaluator = (Evaluator: ExpressionEvaluatorClass) => {
-	const tourn = new Tournament(() => {}, undefined, Evaluator);
+	const tourn = new Tournament(
+		(e) => {
+			console.error(e);
+		},
+		undefined,
+		Evaluator,
+	);
 	const builtins = {
 		String,
 		parseFloat,
@@ -16,8 +22,8 @@ export const testExpressionsWithEvaluator = (Evaluator: ExpressionEvaluatorClass
 		}
 		test(t.expression, () => {
 			for (const test of t.tests.filter(
-				(test_) => test_.type === 'evaluation',
-			) as ExpressionTestEvaluation[]) {
+				(test_): test_ is ExpressionTestEvaluation => test_.type === 'evaluation',
+			)) {
 				expect(
 					tourn.execute(t.expression.slice(1), {
 						...builtins,
