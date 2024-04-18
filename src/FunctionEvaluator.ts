@@ -19,4 +19,6 @@ export class FunctionEvaluator implements ExpressionEvaluator {
 		const fn = this.getFunction(expr);
 		return fn.call(data, this.instance.errorHandler);
 	}
+
+	destroy(): void {}
 }

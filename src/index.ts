@@ -40,4 +40,8 @@ export class Tournament {
 		}
 		return this.evaluator.evaluate(expr, data);
 	}
+
+	destory() {
+		this.evaluator.destroy();
+	}
 }
