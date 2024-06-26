@@ -15,6 +15,15 @@ describe('ES6 Syntax', () => {
 		expect(result instanceof Function).toBe(true);
 	});
 
+	test.only('arrow function call', () => {
+		const result1 = t.execute('{{ () => key }}', { key: 'value' });
+		expect(result1).toBeInstanceOf(Function);
+		expect((result1 as Function)()).toBe('value');
+
+		const result2 = t.execute('{{ (() => key)() }}', { key: 'value' });
+		expect(result2).toBe('value');
+	});
+
 	test('interpolation in template literals', () => {
 		const result = t.execute('{{ `abc ${num} def` }}', { num: 123 });
 
