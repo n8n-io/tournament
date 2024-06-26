@@ -9,19 +9,23 @@ describe('ES6 Syntax', () => {
 		t = new Tournament(fnStub, '___n8n_data');
 	});
 
-	test('arrow functions', () => {
+	test('arrow functions with static data', () => {
 		const result = t.execute('{{ () => 1 }}', {});
 
 		expect(result instanceof Function).toBe(true);
+		expect((result as Function)()).toBe(1);
 	});
 
-	test.only('arrow function call', () => {
-		const result1 = t.execute('{{ () => key }}', { key: 'value' });
-		expect(result1).toBeInstanceOf(Function);
-		expect((result1 as Function)()).toBe('value');
+	test('arrow functions with dynamic data', () => {
+		const result = t.execute('{{ () => key }}', { key: 'value' });
 
-		const result2 = t.execute('{{ (() => key)() }}', { key: 'value' });
-		expect(result2).toBe('value');
+		expect(result instanceof Function).toBe(true);
+		expect((result as Function)()).toBe('value');
+	});
+
+	test('arrow function immediately invoked', () => {
+		const result = t.execute('{{ (() => key)() }}', { key: 'value' });
+		expect(result).toBe('value');
 	});
 
 	test('interpolation in template literals', () => {
