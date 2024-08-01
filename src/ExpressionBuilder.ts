@@ -5,7 +5,7 @@ import { parse, visit, print } from 'recast';
 import { builders as b } from 'ast-types';
 
 import type { ExpressionKind, StatementKind } from 'ast-types/lib/gen/kinds';
-import { jsVariablePolyfill } from './VariablePolyfill';
+import { globalIdentifier, jsVariablePolyfill } from './VariablePolyfill';
 import type { DataNode } from './VariablePolyfill';
 import { splitExpression } from './ExpressionSplitter';
 import type { ExpressionCode, ExpressionText } from './ExpressionSplitter';
@@ -175,9 +175,7 @@ export const getExpressionCode = (
 	const chunks = getParsedExpression(expr);
 
 	const newProg = b.program([
-		b.variableDeclaration('var', [
-			b.variableDeclarator(b.identifier('global'), b.objectExpression([])),
-		]),
+		b.variableDeclaration('var', [b.variableDeclarator(globalIdentifier, b.objectExpression([]))]),
 	]);
 
 	// This is what's used to access that's passed in. For compatibility we us

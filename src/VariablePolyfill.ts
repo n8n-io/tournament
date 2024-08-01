@@ -11,7 +11,7 @@ function assertNever(value: never): value is never {
 	return true;
 }
 
-const globalIdentifier = b.identifier(
+export const globalIdentifier = b.identifier(
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	typeof window !== 'object' ? 'global' : 'window',
