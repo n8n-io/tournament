@@ -10,12 +10,12 @@ jobs:
       - name: Check out commit
         uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v4.0.0
 
-      - name: Use Node.js 18
+      - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 20.x
           cache: pnpm
 
       - name: Run checks
