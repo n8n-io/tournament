@@ -113,203 +113,201 @@ export const jsVariablePolyfill = (
 	ast: types.namedTypes.File,
 	dataNode: DataNode,
 ): StatementKind[] | undefined => {
-	try {
-		visit(ast, {
-			visitIdentifier(path) {
-				this.traverse(path);
-				const parent: ParentKind = path.parent.node;
+	visit(ast, {
+		visitImportExpression(_path) {
+			throw new Error('Imports are not supported');
+		},
+		visitIdentifier(path) {
+			this.traverse(path);
+			const parent: ParentKind = path.parent.node;
 
-				// This is for tmpl compat
-				if (EXEMPT_IDENTIFIER_LIST.includes(path.node.name)) {
-					return;
-				}
+			// This is for tmpl compat
+			if (EXEMPT_IDENTIFIER_LIST.includes(path.node.name)) {
+				return;
+			}
 
-				switch (parent.type) {
-					case 'AssignmentPattern':
-					case 'Property':
-					case 'MemberExpression':
-					case 'OptionalMemberExpression':
-					case 'VariableDeclarator':
-						if (!customPatches[parent.type]) {
-							throw new Error(`Couldn\'t find custom patcher for parent type: ${parent.type}`);
-						}
-						customPatches[parent.type]!(path, parent, dataNode);
-						break;
-					case 'BinaryExpression':
-					case 'UnaryExpression':
-					case 'ArrayExpression':
-					case 'AssignmentExpression':
-					case 'SequenceExpression':
-					case 'YieldExpression':
-					case 'UpdateExpression':
-					case 'LogicalExpression':
-					case 'ConditionalExpression':
-					case 'NewExpression':
-					case 'CallExpression':
-					case 'OptionalCallExpression':
-					case 'TaggedTemplateExpression':
-					case 'TemplateLiteral':
-					case 'AwaitExpression':
-					case 'ImportExpression':
-					case 'ForStatement':
-					case 'IfStatement':
-					case 'WhileStatement':
-					case 'ForInStatement':
-					case 'ForOfStatement':
-					case 'SwitchStatement':
-					case 'ReturnStatement':
-					case 'DoWhileStatement':
-					case 'ExpressionStatement':
-					case 'ForAwaitStatement':
-					case 'ThrowStatement':
-					case 'WithStatement':
-					case 'TupleExpression':
-						polyfillVar(path, dataNode);
-						break;
+			switch (parent.type) {
+				case 'AssignmentPattern':
+				case 'Property':
+				case 'MemberExpression':
+				case 'OptionalMemberExpression':
+				case 'VariableDeclarator':
+					if (!customPatches[parent.type]) {
+						throw new Error(`Couldn\'t find custom patcher for parent type: ${parent.type}`);
+					}
+					customPatches[parent.type]!(path, parent, dataNode);
+					break;
+				case 'BinaryExpression':
+				case 'UnaryExpression':
+				case 'ArrayExpression':
+				case 'AssignmentExpression':
+				case 'SequenceExpression':
+				case 'YieldExpression':
+				case 'UpdateExpression':
+				case 'LogicalExpression':
+				case 'ConditionalExpression':
+				case 'NewExpression':
+				case 'CallExpression':
+				case 'OptionalCallExpression':
+				case 'TaggedTemplateExpression':
+				case 'TemplateLiteral':
+				case 'AwaitExpression':
+				case 'ImportExpression':
+				case 'ForStatement':
+				case 'IfStatement':
+				case 'WhileStatement':
+				case 'ForInStatement':
+				case 'ForOfStatement':
+				case 'SwitchStatement':
+				case 'ReturnStatement':
+				case 'DoWhileStatement':
+				case 'ExpressionStatement':
+				case 'ForAwaitStatement':
+				case 'ThrowStatement':
+				case 'WithStatement':
+				case 'TupleExpression':
+					polyfillVar(path, dataNode);
+					break;
 
-					// Do nothing
-					case 'Super':
-					case 'Identifier':
-					case 'ArrowFunctionExpression':
-					case 'FunctionDeclaration':
-					case 'FunctionExpression':
-					case 'ThisExpression':
-					case 'ObjectExpression':
-					case 'MetaProperty':
-					case 'ChainExpression':
-					case 'PrivateName':
-					case 'ParenthesizedExpression':
-					case 'Import':
-					case 'VariableDeclaration':
-					case 'CatchClause':
-					case 'BlockStatement':
-					case 'TryStatement':
-					case 'EmptyStatement':
-					case 'LabeledStatement':
-					case 'BreakStatement':
-					case 'ContinueStatement':
-					case 'DebuggerStatement':
-					case 'ImportDeclaration':
-					case 'ExportDeclaration':
-					case 'ExportAllDeclaration':
-					case 'ExportDefaultDeclaration':
-					case 'Noop':
-					case 'ClassMethod':
-					case 'ClassPrivateMethod':
-					case 'RestElement':
-					case 'ArrayPattern':
-					case 'ObjectPattern':
-					case 'ClassExpression':
-					case 'RecordExpression':
-					case 'V8IntrinsicIdentifier':
-					case 'TopicReference':
-					case 'MethodDefinition':
-					case 'ClassDeclaration':
-					case 'ClassProperty':
-					case 'StaticBlock':
-					case 'ClassBody':
-					case 'ExportNamedDeclaration':
-					case 'ClassPrivateProperty':
-					case 'ClassAccessorProperty':
-					case 'PropertyPattern':
-						break;
+				// Do nothing
+				case 'Super':
+				case 'Identifier':
+				case 'ArrowFunctionExpression':
+				case 'FunctionDeclaration':
+				case 'FunctionExpression':
+				case 'ThisExpression':
+				case 'ObjectExpression':
+				case 'MetaProperty':
+				case 'ChainExpression':
+				case 'PrivateName':
+				case 'ParenthesizedExpression':
+				case 'Import':
+				case 'VariableDeclaration':
+				case 'CatchClause':
+				case 'BlockStatement':
+				case 'TryStatement':
+				case 'EmptyStatement':
+				case 'LabeledStatement':
+				case 'BreakStatement':
+				case 'ContinueStatement':
+				case 'DebuggerStatement':
+				case 'ImportDeclaration':
+				case 'ExportDeclaration':
+				case 'ExportAllDeclaration':
+				case 'ExportDefaultDeclaration':
+				case 'Noop':
+				case 'ClassMethod':
+				case 'ClassPrivateMethod':
+				case 'RestElement':
+				case 'ArrayPattern':
+				case 'ObjectPattern':
+				case 'ClassExpression':
+				case 'RecordExpression':
+				case 'V8IntrinsicIdentifier':
+				case 'TopicReference':
+				case 'MethodDefinition':
+				case 'ClassDeclaration':
+				case 'ClassProperty':
+				case 'StaticBlock':
+				case 'ClassBody':
+				case 'ExportNamedDeclaration':
+				case 'ClassPrivateProperty':
+				case 'ClassAccessorProperty':
+				case 'PropertyPattern':
+					break;
 
-					// I can't seem to figure out what causes these
-					case 'SpreadElementPattern':
-					case 'SpreadPropertyPattern':
-					case 'ClassPropertyDefinition':
-						break;
+				// I can't seem to figure out what causes these
+				case 'SpreadElementPattern':
+				case 'SpreadPropertyPattern':
+				case 'ClassPropertyDefinition':
+					break;
 
-					// Flow types
-					case 'DeclareClass':
-					case 'DeclareModule':
-					case 'DeclareVariable':
-					case 'DeclareFunction':
-					case 'DeclareInterface':
-					case 'DeclareTypeAlias':
-					case 'DeclareOpaqueType':
-					case 'DeclareModuleExports':
-					case 'DeclareExportDeclaration':
-					case 'DeclareExportAllDeclaration':
-					case 'InterfaceDeclaration':
-					case 'TypeAlias':
-					case 'OpaqueType':
-					case 'EnumDeclaration':
-					case 'TypeCastExpression':
-						break;
+				// Flow types
+				case 'DeclareClass':
+				case 'DeclareModule':
+				case 'DeclareVariable':
+				case 'DeclareFunction':
+				case 'DeclareInterface':
+				case 'DeclareTypeAlias':
+				case 'DeclareOpaqueType':
+				case 'DeclareModuleExports':
+				case 'DeclareExportDeclaration':
+				case 'DeclareExportAllDeclaration':
+				case 'InterfaceDeclaration':
+				case 'TypeAlias':
+				case 'OpaqueType':
+				case 'EnumDeclaration':
+				case 'TypeCastExpression':
+					break;
 
-					// Typescript types
-					case 'TSAsExpression':
-					case 'TSTypeParameter':
-					case 'TSTypeAssertion':
-					case 'TSDeclareMethod':
-					case 'TSIndexSignature':
-					case 'TSDeclareFunction':
-					case 'TSMethodSignature':
-					case 'TSEnumDeclaration':
-					case 'TSExportAssignment':
-					case 'TSNonNullExpression':
-					case 'TSPropertySignature':
-					case 'TSModuleDeclaration':
-					case 'TSParameterProperty':
-					case 'TSTypeCastExpression':
-					case 'TSSatisfiesExpression':
-					case 'TSTypeAliasDeclaration':
-					case 'TSInterfaceDeclaration':
-					case 'TSImportEqualsDeclaration':
-					case 'TSExternalModuleReference':
-					case 'TSInstantiationExpression':
-					case 'TSTypeParameterDeclaration':
-					case 'TSCallSignatureDeclaration':
-					case 'TSNamespaceExportDeclaration':
-					case 'TSConstructSignatureDeclaration':
-						break;
+				// Typescript types
+				case 'TSAsExpression':
+				case 'TSTypeParameter':
+				case 'TSTypeAssertion':
+				case 'TSDeclareMethod':
+				case 'TSIndexSignature':
+				case 'TSDeclareFunction':
+				case 'TSMethodSignature':
+				case 'TSEnumDeclaration':
+				case 'TSExportAssignment':
+				case 'TSNonNullExpression':
+				case 'TSPropertySignature':
+				case 'TSModuleDeclaration':
+				case 'TSParameterProperty':
+				case 'TSTypeCastExpression':
+				case 'TSSatisfiesExpression':
+				case 'TSTypeAliasDeclaration':
+				case 'TSInterfaceDeclaration':
+				case 'TSImportEqualsDeclaration':
+				case 'TSExternalModuleReference':
+				case 'TSInstantiationExpression':
+				case 'TSTypeParameterDeclaration':
+				case 'TSCallSignatureDeclaration':
+				case 'TSNamespaceExportDeclaration':
+				case 'TSConstructSignatureDeclaration':
+					break;
 
-					// Literals that can't contain an identifier
-					case 'DirectiveLiteral':
-					case 'StringLiteral':
-					case 'NumericLiteral':
-					case 'BigIntLiteral':
-					case 'NullLiteral':
-					case 'Literal':
-					case 'RegExpLiteral':
-					case 'BooleanLiteral':
-					case 'DecimalLiteral':
-						break;
+				// Literals that can't contain an identifier
+				case 'DirectiveLiteral':
+				case 'StringLiteral':
+				case 'NumericLiteral':
+				case 'BigIntLiteral':
+				case 'NullLiteral':
+				case 'Literal':
+				case 'RegExpLiteral':
+				case 'BooleanLiteral':
+				case 'DecimalLiteral':
+					break;
 
-					// Proposals that are stage 0 or 1
-					case 'DoExpression':
-					case 'BindExpression':
-						break;
+				// Proposals that are stage 0 or 1
+				case 'DoExpression':
+				case 'BindExpression':
+					break;
 
-					// JSX stuff. We don't support this so just do nothing.
-					case 'JSXIdentifier':
-					case 'JSXText':
-					case 'JSXElement':
-					case 'JSXFragment':
-					case 'JSXMemberExpression':
-					case 'JSXExpressionContainer':
-						break;
+				// JSX stuff. We don't support this so just do nothing.
+				case 'JSXIdentifier':
+				case 'JSXText':
+				case 'JSXElement':
+				case 'JSXFragment':
+				case 'JSXMemberExpression':
+				case 'JSXExpressionContainer':
+					break;
 
-					// I _think_ these are obsolete features proposed as part of ECMAScript 7.
-					// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features#legacy_generator_and_iterator
-					case 'ComprehensionExpression':
-					case 'GeneratorExpression':
-						polyfillVar(path, dataNode);
-						break;
+				// I _think_ these are obsolete features proposed as part of ECMAScript 7.
+				// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features#legacy_generator_and_iterator
+				case 'ComprehensionExpression':
+				case 'GeneratorExpression':
+					polyfillVar(path, dataNode);
+					break;
 
-					default:
-						// This is a simple type guard that guarantees we haven't missed
-						// a case. It'll result in a type error at compile time.
-						assertNever(parent);
-						break;
-				}
-			},
-		});
+				default:
+					// This is a simple type guard that guarantees we haven't missed
+					// a case. It'll result in a type error at compile time.
+					assertNever(parent);
+					break;
+			}
+		},
+	});
 
-		return ast.program.body as StatementKind[];
-	} catch (e) {
-		console.error(e);
-	}
-	return undefined;
+	return ast.program.body as StatementKind[];
 };
