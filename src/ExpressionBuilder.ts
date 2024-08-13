@@ -10,6 +10,7 @@ import type { DataNode } from './VariablePolyfill';
 import { splitExpression } from './ExpressionSplitter';
 import type { ExpressionCode, ExpressionText } from './ExpressionSplitter';
 import { parseWithEsprimaNext } from './Parser';
+import type { TournamentHooks } from './ast';
 
 export interface ExpressionAnalysis {
 	has: {
@@ -171,6 +172,7 @@ export const getParsedExpression = (expr: string): Array<ExpressionText | Parsed
 export const getExpressionCode = (
 	expr: string,
 	dataNodeName: string,
+	hooks: TournamentHooks,
 ): [string, ExpressionAnalysis] => {
 	const chunks = getParsedExpression(expr);
 
@@ -215,9 +217,17 @@ export const getExpressionCode = (
 				parts.push(b.literal(chunk.text));
 				// This is a code chunk so do some magic
 			} else {
-				const parsed = jsVariablePolyfill(fixStringNewLines(chunk.parsed), dataNode)?.[0];
+				const fixed = fixStringNewLines(chunk.parsed);
+				for (const hook of hooks.before) {
+					hook(fixed, dataNode);
+				}
+				const parsed = jsVariablePolyfill(fixed, dataNode)?.[0];
 				if (!parsed || parsed.type !== 'ExpressionStatement') {
 					throw new SyntaxError('Not a expression statement');
+				}
+
+				for (const hook of hooks.after) {
+					hook(parsed, dataNode);
 				}
 
 				const functionBody = buildFunctionBody(parsed.expression);
@@ -263,12 +273,17 @@ export const getExpressionCode = (
 			);
 		}
 	} else {
-		const parsed = jsVariablePolyfill(
-			fixStringNewLines((chunks[1] as ParsedCode).parsed),
-			dataNode,
-		)?.[0];
+		const fixed = fixStringNewLines((chunks[1] as ParsedCode).parsed);
+		for (const hook of hooks.before) {
+			hook(fixed, dataNode);
+		}
+		const parsed = jsVariablePolyfill(fixed, dataNode)?.[0];
 		if (!parsed || parsed.type !== 'ExpressionStatement') {
 			throw new SyntaxError('Not a expression statement');
+		}
+
+		for (const hook of hooks.after) {
+			hook(parsed, dataNode);
 		}
 
 		let retData: StatementKind = b.returnStatement(parsed.expression);

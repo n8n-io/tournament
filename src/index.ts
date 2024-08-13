@@ -3,8 +3,11 @@ import type { ExpressionAnalysis } from './ExpressionBuilder';
 import { getTmplDifference } from './Analysis';
 import type { ExpressionEvaluator, ExpressionEvaluatorClass } from './Evaluator';
 import { FunctionEvaluator } from './FunctionEvaluator';
+import type { TournamentHooks } from './ast';
+
 export type { TmplDifference } from './Analysis';
 export type { ExpressionEvaluator, ExpressionEvaluatorClass } from './Evaluator';
+export * from './ast';
 
 const DATA_NODE_NAME = '___n8n_data';
 export type ReturnValue = string | null | (() => unknown);
@@ -16,6 +19,7 @@ export class Tournament {
 		public errorHandler: (error: Error) => void = () => {},
 		private _dataNodeName: string = DATA_NODE_NAME,
 		Evaluator: ExpressionEvaluatorClass = FunctionEvaluator,
+		private readonly astHooks: TournamentHooks = { before: [], after: [] },
 	) {
 		this.setEvaluator(Evaluator);
 	}
@@ -25,7 +29,7 @@ export class Tournament {
 	}
 
 	getExpressionCode(expr: string): [string, ExpressionAnalysis] {
-		return getExpressionCode(expr, this._dataNodeName);
+		return getExpressionCode(expr, this._dataNodeName, this.astHooks);
 	}
 
 	tmplDiff(expr: string) {
