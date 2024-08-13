@@ -33,7 +33,7 @@ export const getTmplDifference = (expr: string, dataNodeName: string): TmplDiffe
 	let tmplParsed: string | null;
 	let analysis: ExpressionAnalysis | null;
 	try {
-		[tournParsed, analysis] = getExpressionCode(expr, dataNodeName);
+		[tournParsed, analysis] = getExpressionCode(expr, dataNodeName, { before: [], after: [] });
 	} catch (e) {
 		tournParsed = null;
 		analysis = null;
