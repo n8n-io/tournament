@@ -24,7 +24,7 @@ export class Tournament {
 		public errorHandler: (error: Error) => void = () => {},
 		private _dataNodeName: string = DATA_NODE_NAME,
 		Evaluator: ExpressionEvaluatorClass = FunctionEvaluator,
-		private astHooks: TournamentHooks = { before: [], after: [] },
+		private readonly astHooks: TournamentHooks = { before: [], after: [] },
 	) {
 		this.setEvaluator(Evaluator);
 	}

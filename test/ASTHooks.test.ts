@@ -6,7 +6,10 @@ describe('AST Hooks', () => {
 		const hook: ASTBeforeHook = (ast) => {
 			expect(ast.program.body).toHaveLength(1);
 			expect(ast.program.body[0].type).toBe('ExpressionStatement');
-			expect((ast.program.body[0] as ExpressionStatement).expression.type).toBe('Identifier');
+			if (ast.program.body[0].type !== 'ExpressionStatement') {
+				fail('Expected ExpressionStatement');
+			}
+			expect(ast.program.body[0].expression.type).toBe('Identifier');
 		};
 
 		const t = new Tournament(() => {}, undefined, undefined, { before: [hook], after: [] });
@@ -16,7 +19,10 @@ describe('AST Hooks', () => {
 	test('After hooks are called after variable expansion', () => {
 		const hook: ASTAfterHook = (ast) => {
 			expect(ast.type).toBe('ExpressionStatement');
-			expect((ast as ExpressionStatement).expression.type).toBe('MemberExpression');
+			if (ast.type !== 'ExpressionStatement') {
+				fail('Expected ExpressionStatement');
+			}
+			expect(ast.expression.type).toBe('MemberExpression');
 		};
 
 		const t = new Tournament(() => {}, undefined, undefined, { before: [], after: [hook] });
