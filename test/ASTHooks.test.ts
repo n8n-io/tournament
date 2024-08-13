@@ -1,4 +1,3 @@
-import type { ExpressionStatement } from 'esprima-next';
 import { type ASTAfterHook, type ASTBeforeHook, Tournament } from '../src';
 
 describe('AST Hooks', () => {
