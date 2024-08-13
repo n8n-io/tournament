@@ -16,6 +16,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc -p ./tsconfig.build.json",
+    "prepack": "pnpm build",
     "test": "jest",
     "lint": "eslint .",
     "lintfix": "eslint . --fix"
