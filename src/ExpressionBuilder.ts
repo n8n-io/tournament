@@ -10,7 +10,7 @@ import type { DataNode } from './VariablePolyfill';
 import { splitExpression } from './ExpressionSplitter';
 import type { ExpressionCode, ExpressionText } from './ExpressionSplitter';
 import { parseWithEsprimaNext } from './Parser';
-import type { TournamentHooks } from './';
+import type { TournamentHooks } from './ast';
 
 export interface ExpressionAnalysis {
 	has: {

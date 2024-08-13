@@ -3,7 +3,7 @@ import type { ExpressionAnalysis } from './ExpressionBuilder';
 import { getTmplDifference } from './Analysis';
 import type { ExpressionEvaluator, ExpressionEvaluatorClass } from './Evaluator';
 import { FunctionEvaluator } from './FunctionEvaluator';
-import type { ASTBeforeHook, ASTAfterHook } from './ast';
+import type { TournamentHooks } from './ast';
 
 export type { TmplDifference } from './Analysis';
 export type { ExpressionEvaluator, ExpressionEvaluatorClass } from './Evaluator';
@@ -11,11 +11,6 @@ export * from './ast';
 
 const DATA_NODE_NAME = '___n8n_data';
 export type ReturnValue = string | null | (() => unknown);
-
-export interface TournamentHooks {
-	before: ASTBeforeHook[];
-	after: ASTAfterHook[];
-}
 
 export class Tournament {
 	private evaluator!: ExpressionEvaluator;
