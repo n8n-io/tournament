@@ -13,11 +13,15 @@ export interface ExpressionCode {
 
 export type ExpressionChunk = ExpressionCode | ExpressionText;
 
-const OPEN_BRACKET = /(?<escape>\\|)(?<brackets>\{\{)/;
-const CLOSE_BRACKET = /(?<escape>\\|)(?<brackets>\}\})/;
+const OPEN_BRACKET = /(?<brackets>\{\{)/;
+const CLOSE_BRACKET = /(?<brackets>\}\})/;
 
 export const escapeCode = (text: string): string => {
 	return text.replace('\\}}', '}}');
+};
+
+const normalizeBackslashes = (text: string): string => {
+	return text.replace(/\\\\/g, '\\');
 };
 
 export const splitExpression = (expression: string): ExpressionChunk[] => {
@@ -51,16 +55,21 @@ export const splitExpression = (expression: string): ExpressionChunk[] => {
 			}
 			break;
 		}
-		if (res.groups.escape) {
-			buffer += expr.slice(0, res.index + 3);
-			index += res.index + 3;
+
+		const beforeMatch = expr.slice(0, res.index);
+		const backslashCount = beforeMatch.match(/\\*$/)?.[0]?.length ?? 0;
+		const isEscaped = backslashCount % 2 === 1;
+
+		if (isEscaped) {
+			buffer += expr.slice(0, res.index + '{{'.length);
+			index += res.index + '{{'.length;
 		} else {
 			buffer += expr.slice(0, res.index);
 
 			if (searchingFor === 'open') {
 				chunks.push({
 					type: 'text',
-					text: buffer,
+					text: normalizeBackslashes(buffer),
 				});
 				searchingFor = 'close';
 				activeRegex = CLOSE_BRACKET;
