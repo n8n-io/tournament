@@ -36,10 +36,28 @@ describe('tmpl Expression Parser', () => {
 			]);
 		});
 
-		test('Escaped closinging bracket', () => {
+		test('Escaped closing bracket', () => {
 			expect(splitExpression('test {{ code.test("\\}}") }}')).toEqual([
 				{ type: 'text', text: 'test ' },
 				{ type: 'code', text: ' code.test("}}") ', hasClosingBrackets: true },
+			]);
+		});
+
+		test('Escaped backslashes before double opening curly braces', () => {
+			const expr =
+				'C:\\\\Users\\\\Administrator\\\\Desktop\\\\abc\\\\{{ $json.files[0].fileName }}';
+			const result = splitExpression(expr);
+
+			expect(result).toEqual([
+				{
+					type: 'text',
+					text: 'C:\\Users\\Administrator\\Desktop\\abc\\',
+				},
+				{
+					type: 'code',
+					text: ' $json.files[0].fileName ',
+					hasClosingBrackets: true,
+				},
 			]);
 		});
 	});
