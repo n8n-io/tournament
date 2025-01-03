@@ -36,3 +36,14 @@ const tournament = new Tournament((error) => {
 	console.error('Expression error:', error);
 });
 ```
+
+## Release
+
+To release, update the version in `package.json` and run:
+
+```sh
+npm version {version}
+npm publish
+```
+
+You will need permissions to publish via n8n's npm org.
