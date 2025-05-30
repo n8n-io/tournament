@@ -1,11 +1,9 @@
 import { getExpressionCode } from './ExpressionBuilder';
 import type { ExpressionAnalysis } from './ExpressionBuilder';
-import { getTmplDifference } from './Analysis';
 import type { ExpressionEvaluator, ExpressionEvaluatorClass } from './Evaluator';
 import { FunctionEvaluator } from './FunctionEvaluator';
 import type { TournamentHooks } from './ast';
 
-export type { TmplDifference } from './Analysis';
 export type { ExpressionEvaluator, ExpressionEvaluatorClass } from './Evaluator';
 export * from './ast';
 
@@ -30,10 +28,6 @@ export class Tournament {
 
 	getExpressionCode(expr: string): [string, ExpressionAnalysis] {
 		return getExpressionCode(expr, this._dataNodeName, this.astHooks);
-	}
-
-	tmplDiff(expr: string) {
-		return getTmplDifference(expr, this._dataNodeName);
 	}
 
 	execute(expr: string, data: unknown): ReturnValue {
