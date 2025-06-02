@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@n8n_io/riot-tmpl':
-        specifier: ^4.0.1
-        version: 4.0.1
       ast-types:
         specifier: ^0.16.1
         version: 0.16.1
@@ -383,9 +380,6 @@ packages:
 
   '@n8n_io/eslint-config@0.0.2':
     resolution: {integrity: sha512-nqVq6k7q0Kk6GMkifVZQ5yEEHob8wbPMq062ds4E/eywiqfaWuGNAQ+ax678iRTlyOS/i4/e23SB0vb0oylr7Q==}
-
-  '@n8n_io/riot-tmpl@4.0.1':
-    resolution: {integrity: sha512-/zdRbEfTFjsm1NqnpPQHgZTkTdbp5v3VUxGeMA9098sps8jRCTraQkc3AQstJgHUm7ylBXJcIVhnVeLUMWAfwQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -923,9 +917,6 @@ packages:
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
-
-  eslint-config-riot@1.0.0:
-    resolution: {integrity: sha512-NB/L/1Y30qyJcG5xZxCJKW/+bqyj+llbcCwo9DEz8bESIP0SLTOQ8T1DWCCFc+wJ61AMEstj4511PSScqMMfCw==}
 
   eslint-import-resolver-node@0.3.7:
     resolution: {integrity: sha512-gozW2blMLJCeFpBwugLTGyvVjNoeo1knonXAcatC6bjPBZitotxdWf7Gimr25N4c0AAOo4eOUfaG82IJPDpqCA==}
@@ -2745,10 +2736,6 @@ snapshots:
 
   '@n8n_io/eslint-config@0.0.2': {}
 
-  '@n8n_io/riot-tmpl@4.0.1':
-    dependencies:
-      eslint-config-riot: 1.0.0
-
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -3366,8 +3353,6 @@ snapshots:
   eslint-config-prettier@8.8.0(eslint@8.38.0):
     dependencies:
       eslint: 8.38.0
-
-  eslint-config-riot@1.0.0: {}
 
   eslint-import-resolver-node@0.3.7:
     dependencies:
