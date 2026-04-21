@@ -7,7 +7,7 @@ import { builders as b } from 'ast-types';
 import type { ParentKind } from './Constants';
 import { EXEMPT_IDENTIFIER_LIST } from './Constants';
 
-function assertNever(value: never): value is never {
+function assertNever(_value: never): _value is never {
 	return true;
 }
 
