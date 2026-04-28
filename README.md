@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> @n8n/tournament now lives in the [n8n-io/n8n monorepo](https://github.com/n8n-io/n8n/tree/master/packages/%40n8n/tournament)
+>
+> This repository is archived
+
 # @n8n/tournament
 
 Tournament is an output-compatible rewrite of [`riot-tmpl`](https://github.com/riot/tmpl) for template expression evaluation.
